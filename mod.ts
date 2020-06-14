@@ -1,8 +1,14 @@
 import { Application } from "https://deno.land/x/oak@v5.0.0/mod.ts";
 
 const app = new Application();
-const port = 8000;
+const PORT = 8000;
 
-app.listen({
-  port: PORT,
+app.use((ctx) => {
+  ctx.response.body = `Nasa Mission Control API`;
 });
+
+if (import.meta.main) {
+  await app.listen({
+    port: PORT,
+  });
+}
