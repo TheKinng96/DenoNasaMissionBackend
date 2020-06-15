@@ -1,5 +1,8 @@
 import { Application, send } from "https://deno.land/x/oak@v5.0.0/mod.ts";
 
+import * as planets from "./models/planets.ts";
+import api from './api.ts'
+
 const app = new Application();
 const PORT = 8000;
 
@@ -17,12 +20,14 @@ app.use(async (ctx, next) => {
   console.log(delta);
 });
 
+app.use(api.routes());
+
 app.use(async (ctx) => {
   const filePath = ctx.request.url.pathname;
   const fileWhitelist = [
     "/index.html",
     "/javascripts/script.js",
-    "/styleshets/style.css",
+    "/stylesheets/style.css",
     "/images/favicon.png",
   ];
   if (fileWhitelist.includes(filePath)) {
@@ -30,18 +35,6 @@ app.use(async (ctx) => {
       root: `${Deno.cwd()}/public`,
     });
   }
-});
-
-app.use(async (ctx) => {
-  ctx.response.body = `
-  {___     {__      {_        {__ __        {_
-  {_ {__   {__     {_ __    {__    {__     {_ __
-  {__ {__  {__    {_  {__    {__          {_  {__
-  {__  {__ {__   {__   {__    {__        {__   {__
-  {__   {_ {__  {______ {__      {__    {______ {__
-  {__    {_ __ {__       {__ {__  {__  {__       {__
-  {__      {__{__         {__  {__ __ {__         {__
-                  Mission Control API`;
 });
 
 if (import.meta.main) {
