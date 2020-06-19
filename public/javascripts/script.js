@@ -1,5 +1,4 @@
 // @ts-nocheck
-
 let launches = [];
 
 const numberHeading = "No.".padStart(5);
@@ -49,21 +48,25 @@ function submitLaunch() {
   const launchDate = new Date(document.getElementById("launch-day").value);
   const mission = document.getElementById("mission-name").value;
   const rocket = document.getElementById("rocket-name").value;
-  const flightNumber = launches[launches.length - 1]?.flightNumber + 1 || 1;
-  const customers = ["NASA", "ZTM"];
+  const flightNumber = launches[launches.length - 1].flightNumber + 1;
 
-  launches.push({
-    target,
-    launchDate: launchDate / 1000,
-    mission,
-    rocket,
-    flightNumber,
-    customers,
-  });
-  document.getElementById("launch-success").hidden = false;
-
-  // TODO: Once API is ready.
-  // Submit above data to launch system and reload launches.
+  return fetch("/launches", {
+    method: "post",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      launchDate: Math.floor(launchDate / 1000),
+      flightNumber,
+      mission,
+      rocket,
+      target,
+    }),
+  })
+    .then(() => {
+      document.getElementById("launch-success").hidden = false;
+    })
+    .then(loadLaunches);
 }
 
 function listUpcoming() {
