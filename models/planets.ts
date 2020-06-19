@@ -1,6 +1,7 @@
 import { join } from "http://deno.land/std/path/mod.ts";
 import { BufReader } from "http://deno.land/std/io/bufio.ts";
 import { parse } from "http://deno.land/std/encoding/csv.ts";
+import * as log from "https://deno.land/std/log/mod.ts";
 
 import * as _ from "https://deno.land/x/lodash@4.17.15-es/lodash.js";
 
@@ -8,7 +9,7 @@ type Planet = Record<string, string>;
 
 let planets = Array<Planet>();
 
-export function filterHabitablePlanets(planets : Array<Planet>) {
+export function filterHabitablePlanets(planets: Array<Planet>) {
   return planets.filter((planet) => {
     const planetaryRadius = Number(planet["koi_prad"]);
     const stellarMass = Number(planet["koi_smass"]);
@@ -32,7 +33,7 @@ async function loadPlanetData() {
   });
   Deno.close(data.rid);
 
-  const planets = filterHabitablePlanets(result as Array<Planet>)
+  const planets = filterHabitablePlanets(result as Array<Planet>);
 
   return planets.map((planet) => {
     return _.pick(planet, [
@@ -48,7 +49,7 @@ async function loadPlanetData() {
 }
 
 planets = await loadPlanetData();
-console.log(`${planets.length} habitable planets found!`);
+log.info(`${planets.length} habitable planets found!`);
 
 export function getAllPlanets() {
   return planets;

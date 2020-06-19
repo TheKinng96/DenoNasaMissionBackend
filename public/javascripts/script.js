@@ -17,8 +17,13 @@ function initValues() {
 }
 
 function loadLaunches() {
-  // TODO: Once API is ready.
-  // Load launches and sort by flight number.
+  fetch("/launches")
+    .then((launchResponse) => launchResponse.json())
+    .then((fetchedLaunches) => {
+      launches = fetchedLaunches.sort((a, b) => {
+        return a.flightNumber < b.flightNumber;
+      });
+    });
 }
 
 function loadPlanets() {
@@ -31,7 +36,7 @@ function loadPlanets() {
         planetSelector.innerHTML +=
           `<option value="${planet.kepler_name}">${planet.kepler_name}</option>`;
       });
-  })
+    });
 }
 
 function abortLaunch() {
